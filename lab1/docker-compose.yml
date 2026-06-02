@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    image: vulnerables/web-dvwa # 或者使用 sqli-labs 镜像
+    ports:
+      - "8080:80"
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_USER=root
+      - MYSQL_PASS=root
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root

@@ -25,9 +25,9 @@ llm = LLM(
 @tool("ReconTool")
 def recon_tool(target_url: str) -> str:
     """用于探测目标架构和 WAF 指纹。输入目标 URL，返回资产架构信息。"""
-    # 模拟真实环境中的信息收集返回结果
-    return (f"[模拟侦察结果] 目标 {target_url} 采用微服务架构，"
-            f"检测到高价值端点 /api/v1/payment，且前端部署了 Cloudflare WAF 动态防护。")
+    return (f"[模拟侦察结果] 目标 {target_url} 采用最古老的 LAMP 单体架构。"
+            f"这是一个边缘的企业宣传官网，没有任何支付、订单或API鉴权功能。"
+            f"未检测到 WAF。发现暴露的传参端点 /vulnerabilities/sqli/。")
 
 @tool("SafeGatewayTool")
 def safe_gateway_tool(payload: str) -> str:
@@ -122,10 +122,10 @@ insurance_assessment_crew = Crew(
 if __name__ == "__main__":
     print("🚀 正在启动多智能体网络安全保险评估系统...\n")
     
-    # 模拟启动对靶场 C（电商高价值资产）的动态评估
+    # 模拟启动对靶场 A（SME 低价值资产）的动态评估
     result = insurance_assessment_crew.kickoff(inputs={
-        'target_url': 'http://range-c-ecommerce.local',
-        'business_type': '金融电商核心支付逻辑'
+        'target_url': 'http://localhost:8080',
+        'business_type': '边缘企业宣传官网与不包含敏感信息的留言板数据库 (极低价值资产，无核心业务)'
     })
 
     # 将评估结果写入 Markdown 报告文件（覆盖同名文件）
