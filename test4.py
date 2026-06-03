@@ -25,11 +25,11 @@ llm = LLM(
 @tool("ReconTool")
 def recon_tool(target_url: str) -> str:
     """用于探测目标架构和 WAF 指纹。输入目标 URL，返回资产架构信息。"""
-    return (f"[模拟侦察结果] 目标 {target_url} 是一家大型金融电商平台。\n"
-            f"架构：Java Spring Boot + K8s集群。\n"
-            f"防护：前端部署了严格的商业云 WAF（如阿里云WAF/Cloudflare），会拦截所有常规 SQLi 和 XSS 探针。\n"
-            f"高价值端点：发现暴露的支付核销接口 POST /api/v1/order/checkout。\n"
-            f"参数结构推测：该接口接收 JSON 格式数据，包含 item_id (商品ID) 和 price (支付金额)。")
+    return (f"[模拟侦察结果] 目标 {target_url} 为跨国集团分布式网络。\n"
+            f"架构：Service Mesh 微服务集群。边缘网关未部署常规 WAF。\n"
+            f"公开端点：POST /api/v1/gateway/log\n"
+            f"指纹识别：该网关底层集成了开源组件 'FastLog-Parser v2.4.1'（该版本在安全社区被曝存在高危供应链缺陷）。\n"
+            f"内部拓扑猜测：网关后方通常连通着不公开的内部核心资产隔离区。")
 
 @tool("SafeGatewayTool")
 def safe_gateway_tool(payload: str) -> str:
@@ -134,16 +134,16 @@ insurance_assessment_crew = Crew(
 if __name__ == "__main__":
     print("🚀 正在启动 MARS-DP 挑战靶场 C (带 WAF 的金融电商)...\n")
     
-    # 模拟启动对靶场 C（极高价值资产）的动态评估
+    # 模拟启动对靶场 D（集团级供应链与多级渗透拓扑）的动态评估
     result = insurance_assessment_crew.kickoff(inputs={
-        'target_url': 'http://127.0.0.1:8001',
-        'business_type': '金融电商核心支付与清算链路（涉及企业核心资金池，极高价值资产）'
+        'target_url': 'http://127.0.0.1:8002',
+        'business_type': '大型跨国集团中心微服务集群与底层供应链生态（系统性级联风险，关系到集团存亡的特大价值资产）'
     })
 
     # 将评估结果写入 Markdown 报告文件（覆盖同名文件）
     import os
     from datetime import datetime
-    report_path = os.path.join(os.path.dirname(__file__), "最终报告3.md")
+    report_path = os.path.join(os.path.dirname(__file__), "最终报告4.md")
     report_content = (
         f"# 最终精算报告 (靶场C)\n\n"
         f"**生成时间**：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
