@@ -3,47 +3,49 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![CrewAI](https://img.shields.io/badge/Powered%20by-CrewAI-orange.svg)](https://crewai.com/)
+[![FastAPI](https://img.shields.io/badge/Framework-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
 [![LLM: DeepSeek](https://img.shields.io/badge/LLM-DeepSeek-black.svg)](https://www.deepseek.com/)
 
-**MARS-DP** 是一个基于大语言模型（LLM）驱动的多智能体协同 Web 风险评估与网络安全保险动态定价系统。
+MARS-DP 是一个由大语言模型（LLM）驱动的多智能体协同 Web 风险评估与网络安全保险动态定价系统，面向研究与工程复现。
 
-本项目旨在解决传统自动化扫描工具（如 Nessus、AWVS）在面对现代云原生架构和复杂业务逻辑时产生的高误报率问题。通过引入多智能体协同推理与“无损安全网关（SafeGateway）”，系统能够自动化推演 API 越权、逻辑篡改及高隐蔽性攻击路径，并将技术风险精准映射为保险精算的动态保费。
-
----
-
-## ✨ 核心特性 (Key Features)
-
-* **🤖 多智能体协同 (Multi-Agent Orchestration)**
-  解耦传统扫描器的线性逻辑，构建了 Recon（侦察）、Verify（验证）、Audit（审计）三大智能体，实现“发现-验证-定价”的闭环。
-* **🛡️ 无损安全验证 (SafeGateway Verification)**
-  内置严格的 AST/正则中间件网关，限制大模型的破坏性指令（如 `DROP`、`DELETE`），确保漏洞深度验证过程不影响目标业务的连续性，满足保险核保红线。
-* **🧠 复杂业务逻辑推演 (Business Logic Deduction)**
-  有效检测现代微服务架构中的 API 越权（BOLA/IDOR）、支付逻辑漏洞以及高隐蔽性 SQL 注入变种，克服静态规则扫描的盲区。
-* **💰 动态精算映射 (Actuarial Mapping)**
-  结合多步攻击路径成功率与核心资产权重（$W_{asset}$），自动计算动态风险得分（DRS, Dynamic Risk Score），直接赋能网络安全保险的费率厘定。
+本项目旨在解决传统 DAST 工具（如 ZAP、AWVS）在云原生与复杂业务逻辑场景下的漏报与语义盲区问题。通过基于 ReAct 的多智能体协同推理与“无损安全网关（SafeGateway）”，系统实现“拓扑感知 → 深层验证 → 精算定价”的闭环，并将技术风险映射为可量化的动态保费。
 
 ---
 
-## 🏗️ 系统架构 (Architecture)
+## ✨ 核心特性
 
-1. **Recon Agent (侦察智能体)**：动态提取目标系统的业务拓扑、API 暴露面及 WAF 防护指纹。
-2. **Verify Agent (验证智能体)**：接收侦察数据，通过多轮上下文推理生成探测 Payload，在 SafeGateway 约束下进行真实可利用性验证。
-3. **Audit Agent (审计智能体)**：综合验证结果与资产核心价值，输出金融级风险定级与保费调整倍数。
+- **🤖 多智能体架构 (Multi-Agent Orchestration)**：解耦传统扫描器的线性流程，包含 Recon（侦察）、Verify（验证）、Audit（审计）三大智能体，支持多轮交互与上下文记忆。
+- **🛡️ 无损安全验证 (SafeGateway Verification)**：基于 AST 与正则规则的中间件，对大模型生成的验证载荷做物理级别过滤，拦截破坏性指令，保证“零损害”验证。
+- **🧠 复杂逻辑漏洞推演 (Business Logic Deduction)**：自动化推演 API 越权（BOLA/IDOR）、支付逻辑篡改、以及高隐蔽性攻击链路。
+- **💰 动态精算映射 (Actuarial Mapping)**：将多步攻击路径成功概率与资产权重（`W_asset`）结合，计算动态风险得分（`DRS`），支持精算级别的保费调整。
 
 ---
 
-## 🚀 快速开始 (Quick Start)
+## 🎯 实验靶场与评估范围
 
-### 1. 环境准备
+项目内置四个基于 FastAPI 与 Docker 的典型企业数字孪生靶场（Range A–D），用于验证不同风险场景：
 
-确保您的系统中已安装 Python 3.10 或更高版本。
+- **Range A (SME Monolith)**：传统单体架构，测试基础漏洞与高隐蔽性 SQL 注入变种。
+- **Range B (Cloud-Native SaaS)**：微服务架构，测试智能体在合法 Token 流转下能否发现 API 越权（BOLA）。
+- **Range C (Hybrid Enterprise)**：带有 WAF 的支付接口，验证是否能用合法载荷（如 `{"price": 0.01}`）篡改业务逻辑。
+- **Range D (Critical Infrastructure)**：边缘网关与供应链缺陷场景，测试多步横向移动链路（RCE → 内网凭证提取 → 数据外泄）。
+
+---
+
+## 🚀 快速开始
+
+确保 Python 3.10+ 与 Docker（仅当需要运行本地靶场时）已安装。
+
+1. 克隆仓库并进入目录：
 
 ```bash
-# 克隆仓库
-git clone https://github.com/yourusername/MARS-DP.git
+git clone https://github.com/cuihang/MARS-DP.git
 cd MARS-DP
+```
 
-# 创建并激活虚拟环境
+2. 创建并激活虚拟环境：
+
+```bash
 python -m venv venv
 # macOS / Linux
 source venv/bin/activate
@@ -51,69 +53,70 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### 2. 安装依赖
-
-本项目底层依赖 `crewai` 和 `litellm`（以及若干辅助库）。推荐先尝试：
+3. 安装依赖：
 
 ```bash
 pip install -r requirements.txt
 ```
 
-如果仓库中没有 `requirements.txt`，请手动安装必需包：
+若无 `requirements.txt`，可按需安装主要依赖：
 
 ```bash
-pip install crewai litellm python-dotenv langchain-openai
+pip install crewai litellm python-dotenv langchain-openai requests fastapi uvicorn
 ```
 
-### 3. 配置环境变量
-
-在项目根目录创建一个 `.env` 文件，填入您的 LLM API 密钥（示例使用 DeepSeek）：
+4. 配置环境变量：复制 `.env.example` 为 `.env`，并填入 LLM API Key（示例使用 DeepSeek）：
 
 ```text
 # .env
-DEEPSEEK_API_KEY="sk-您的API密钥"
+DEEPSEEK_API_KEY="sk-your-api-key-here"
 ```
 
-如果您使用 OpenAI/Claude 等服务，请按对应 SDK 要求设置相应的环境变量。
-
-### 4. 运行系统
-
-启动项目入口（示例）：
+5. 启动消融实验与精算评估（示例）：
 
 ```bash
-python main.py
+# 启动多智能体协同评估（默认对 Range D 进行推演）
+python ablation_runner.py
 ```
 
-执行后，终端将输出智能体的协同过程日志与最终的精算得分（或将结果写入报告文件，取决于实现）。
+执行后，终端将打印智能体的思维链日志（CoT）、SafeGateway 拦截记录，并在项目目录下生成 Markdown 格式的最终评估报告。
 
-### 📂 目录结构 (Repository Structure)
+---
 
-```
+## 📂 目录结构（示意）
+
+```text
 MARS-DP/
-├── main.py                # 系统入口与 CrewAI 任务编排
-├── tools/                 # 智能体工具库
-│   ├── safe_gateway.py    # 无损安全验证网关实现
-│   └── recon_tool.py      # 资产指纹与 API 探测脚本
+├── ablation_runner.py     # 系统主入口与消融实验调度
+├── requirements.txt       # 可选：项目依赖
+├── tools/                 # 智能体工具库（SafeGateway、Recon 等）
+├── target_ranges/         # 本地 FastAPI 靶场（Range A-D）
 ├── agents/                # 智能体角色与 Prompt 定义
-├── config/                # 靶场环境与资产权重配置
-├── docs/                  # 学术论文与架构图文档
+├── docs/                  # 架构与精算映射文档
 ├── .env.example           # 环境变量模板
 └── README.md              # 项目说明
 ```
 
-### 学术引用 (Citation)
+---
 
-如果您在研究或工作中使用了 MARS-DP 代码或思想，请引用我们的相关论文（Submitted to CSDP 2026）：
+## 🎓 学术引用
+
+若在学术或工程工作中使用本项目，请引用：
 
 ```
-@inproceedings{marsdp2026,
-  title={Multi-Agent Collaborative Web Risk Assessment for Dynamic Pricing in Cyber Insurance},
-  author={您的名字},
-  booktitle={Proceedings of the Cybersecurity and Data Protection Conference (CSDP)},
-  year={2026}
+@inproceedings{cui2026marsdp,
+	title={Multi-Agent Collaborative Web Risk Assessment for Dynamic Pricing in Cyber Insurance},
+	author={Cui, Hang and others},
+	booktitle={Proceedings of the IEEE Symposium on Security and Privacy (S&P)},
+	year={2026}
 }
 ```
 
-### 许可证 (License)
+---
 
-本项目基于 MIT License 开源。欢迎安全研究人员与精算师提交 Pull Requests 或探讨合作！
+## 📜 许可证
+
+本项目基于 MIT License 开源。欢迎提交 PR 与讨论合作。
+
+---
+

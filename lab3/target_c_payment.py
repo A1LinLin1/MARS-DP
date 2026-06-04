@@ -36,6 +36,10 @@ class CheckoutRequest(BaseModel):
     item_id: int
     price: float
 
+@app.get("/")
+async def read_root():
+    return {"message": "欢迎来到金融电商核心支付系统", "status": "online"}
+
 # 2. 核心漏洞接口：支付核销 (业务逻辑缺陷)
 @app.post("/api/v1/order/checkout")
 async def checkout(order: CheckoutRequest):
